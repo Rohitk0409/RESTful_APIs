@@ -4,18 +4,23 @@ const app=express();
 const port=3000;
 const path=require("path");
 
-
+// This use for Delete and edit (after installing pakage in terminal -->  npm install method-override)
 var methodOverride = require('method-override')
 
-
+// This use generate some unique id (ater installing pakage -->npm i uuid <---)
 const { v4: uuidv4 } = require('uuid');
 
+// For EJS file access
 app.set("view engine","ejs");
 app.use(express.urlencoded({extended:true}));
+
+// This use for Delete and edit --> (PATCH AND DELETE)
 app.use(methodOverride('_method'));
 
 // app.set("views", path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public")));
+
+// Create an Array 
 let posts=[
     {
         id:uuidv4(),
@@ -27,24 +32,26 @@ let posts=[
         username:"anchal243",
         content:"THis page belongs to anchal patel"
     }
-]
+];
+
+// GET Request
 app.get("/posts",(req,res)=>{
-    
     res.render("home.ejs",{posts});
    });
-   app.get("/posts/new",(req,res)=>{
-     
-    // posts.push(username,content);
+
+   // GET request for create new post --> (/posts/new)
+ app.get("/posts/new",(req,res)=>{
     res.render("new.ejs");
    });
 
+// POST request
    app.post("/posts",(req,res)=>{
     let {username,content}=req.body;
     let id=uuidv4(); 
      posts.push({id,username,content});
     res.redirect("/posts")
    });
-
+// posts/:id request (access wuth id to any users)
    app.get("/posts/:id",(req,res)=>{
     let{id}=req.params;
     // finding and matching id with array id
@@ -80,7 +87,7 @@ app.get("/posts",(req,res)=>{
         
     })
 
-
+// For all another request sending response
 app.get("*",(req,res)=>{
     res.send("Sorry! This page does not found.....");
    });
